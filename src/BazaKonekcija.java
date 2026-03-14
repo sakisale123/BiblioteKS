@@ -140,4 +140,40 @@ public class BazaKonekcija {
     }
 
 
+    public static void prikaziKnjigeClana(int clanId) {
+        String sqlUpit = "SELECT k.naziv, k.autor, c.ime, c.prezime " +
+                "FROM knjige k " +
+                "JOIN clanovi c ON k.zaduzena_clan_id = c.id " +
+                "WHERE c.id = ?";
+
+        try (Connection konekcija = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement oklopnoVozilo = konekcija.prepareStatement(sqlUpit)) {
+
+            oklopnoVozilo.setInt(1, clanId);
+
+            ResultSet rezultat = oklopnoVozilo.executeQuery();
+
+            System.out.println("\n--- ZADUZENE KNJIGE ZA CLANA ID: " + clanId + " ---");
+
+            boolean imaKnjiga = false;
+
+            while (rezultat.next()) {
+                imaKnjiga = true;
+                String naslov = rezultat.getString("naziv");
+                String autor = rezultat.getString("autor");
+                String ime = rezultat.getString("ime");
+                String prezime = rezultat.getString("prezime");
+
+                System.out.println("- " + naslov + " (" + autor + ") -> Kod: " + ime + " " + prezime);
+            }
+
+            if (!imaKnjiga) {
+                System.out.println("Ovaj clan trenutno nema zaduzenih knjiga.");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Greska pri spajanju tabela: " + e.getMessage());
+        }
+    }
+
 }

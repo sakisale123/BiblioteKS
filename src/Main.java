@@ -87,9 +87,10 @@ public class Main {
                     break;
                 case "7":
                     try{
-                        System.out.println("Unesi broj clanske karte: ");
+                        System.out.println("Unesi id clanske : ");
                         int id = Integer.parseInt(input.nextLine());
-                        biblioteka.prikaziZaduzeneKnjige(id);
+                        BazaKonekcija.prikaziKnjigeClana(id);
+//                        biblioteka.prikaziZaduzeneKnjige(id);
                     }catch (Exception e){
                         System.out.println("Greska pri pretrazi");
                     }
