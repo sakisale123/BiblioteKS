@@ -49,4 +49,95 @@ public class BazaKonekcija {
             System.out.println("Greska prilikom povezovanja: " + e.getMessage());
         }
     }
+
+
+    public static void dodajKnjiguUBazu(String naslov, String autor, String isbn){
+        String sqlUpit = "INSERT INTO knjige (naziv, autor, isbn) VALUES (?, ?, ?)";
+
+        try(Connection konekcija = DriverManager.getConnection(URL,USER,PASSWORD);
+            PreparedStatement vozilo = konekcija.prepareStatement(sqlUpit);) {
+            vozilo.setString(1, naslov);
+            vozilo.setString(2, autor);
+            vozilo.setString(3, isbn);
+
+            int brojDodatihRedova = vozilo.executeUpdate();
+
+            if (brojDodatihRedova > 0) {
+                System.out.println("Dodatih redovata: " + brojDodatihRedova);
+            }
+
+            } catch (SQLException e) {
+            System.out.println("Greska prilikom povezovanja: " + e.getMessage());
+        }
+
+    }
+
+
+
+    public static void dodajClanaUBazu (String ime, String prezime, String brojKarte){
+        String sqlUpit = "INSERT INTO clanovi (ime,prezime,broj_karte) VALUES (?, ?, ?)";
+
+        try(Connection konekcija = DriverManager.getConnection(URL,USER,PASSWORD);
+            PreparedStatement vozilo = konekcija.prepareStatement(sqlUpit)){
+
+            vozilo.setString(1, ime);
+            vozilo.setString(2, prezime);
+            vozilo.setString(3, brojKarte);
+
+            int brojDodatihRedova = vozilo.executeUpdate();
+
+            if (brojDodatihRedova > 0) {
+                System.out.println("Dodatih redovata: " + brojDodatihRedova);
+            }
+
+        }catch (SQLException e){
+            System.out.println("Greska prilikom povezovanja: " + e.getMessage());
+        }
+    }
+
+
+    public static void zaduziKnjiguIzBaze(int clanId, int knjigaId){
+        String sqlUpit = "update knjige\n" +
+                "set zaduzena_clan_id = ?\n" +
+                "where id = ? and zaduzena_clan_id is null";
+
+        try(Connection konekcija = DriverManager.getConnection(URL,USER,PASSWORD);
+        PreparedStatement vozilo = konekcija.prepareStatement(sqlUpit)){
+            vozilo.setInt(1, clanId);
+            vozilo.setInt(2, knjigaId);
+            int brojDodatihRedova = vozilo.executeUpdate();
+            if (brojDodatihRedova > 0) {
+                System.out.println("Dodatih redovata: " + brojDodatihRedova);
+
+            }
+        } catch (SQLException e) {
+            System.out.println("Greska prilikom povezovanja: " + e.getMessage());
+        }
+    }
+
+
+    public static void vratiKnjiguUBazu(int idKnjige){
+        String sqlUpit = "update knjige\n" +
+                "set zaduzena_clan_id = null\n" +
+                "where id = ?";
+
+
+        try (Connection konekcija = DriverManager.getConnection(URL,USER,PASSWORD);
+            PreparedStatement vozilo = konekcija.prepareStatement(sqlUpit)){
+
+            vozilo.setInt(1,idKnjige);
+
+            int brojDodatihRedova = vozilo.executeUpdate();
+
+            if (brojDodatihRedova > 0) {
+                System.out.println("Dodatih redovata: " + brojDodatihRedova);
+            }
+
+        }catch (SQLException e){
+            System.out.println("Greska prilikom povezovanja: " + e.getMessage());
+        }
+
+    }
+
+
 }

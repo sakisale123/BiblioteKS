@@ -33,7 +33,9 @@ public class Main {
                     System.out.println("Unesi IBSN: ");
                     String ibsn = input.nextLine();
 
-                    biblioteka.dodajKnjigu(naslov, autor, ibsn);
+//                    Korisceno array list kao baza i sada je prevaceno na MySQL
+//                    biblioteka.dodajKnjigu(naslov, autor, ibsn);
+                    BazaKonekcija.dodajKnjiguUBazu(naslov, autor, ibsn);
                     break;
 
 
@@ -44,35 +46,40 @@ public class Main {
 
 
                 case "3":
-                    String nazivKnjige = "";
+                    int idKnjige = 0;
                     int idClana = 0;
                     try{
                         System.out.println("\nUnesi clanskiBroj koji uzima: ");
                         idClana = Integer.parseInt(input.nextLine());
-                        System.out.println("\nUnesi knjigu koju si uzeo: ");
-                        nazivKnjige = input.nextLine();
-                        biblioteka.zaduziKnjigu(nazivKnjige,idClana);
-
+                        System.out.println("\nUnesi id knjige koju si uzeo: ");
+                        idKnjige = Integer.parseInt(input.nextLine());
+//                        biblioteka.zaduziKnjigu(nazivKnjige,idClana);
+                        BazaKonekcija.zaduziKnjiguIzBaze(idClana,idKnjige);
                     }
                     catch (Exception e){
-                        System.out.println("Neposotji na : "+ nazivKnjige);
+                        System.out.println("Neposotji na : "+ idKnjige);
                     }
                     break;
 
                 case "4":
-                    System.out.println("\nUnesi clanskiBroj koji uzima: ");
-                    idClana = Integer.parseInt(input.nextLine());
-                    System.out.println("\nUnesi knjigu koju si uzeo: ");
-                    nazivKnjige = input.nextLine();
-                    biblioteka.vratiKnjigu(nazivKnjige,idClana);
+//                    System.out.println("\nUnesi clanskiBroj koji uzima: ");
+//                    idClana = Integer.parseInt(input.nextLine());
+                    System.out.println("\nUnesi id knjige koju si uzeo: ");
+                    idKnjige = Integer.parseInt(input.nextLine());
+//                    biblioteka.vratiKnjigu(idKnjige,idClana);
+                    BazaKonekcija.vratiKnjiguUBazu(idKnjige);
                     break;
                 case "5":
                     System.out.println("Unesi ime: ");
                     String ime = input.nextLine();
                     System.out.println("Unesi prezime: ");
                     String prezime = input.nextLine();
+                    System.out.println("Unesi trocifren broj karte: ");
+                    String brojKarte = input.nextLine();
+                    brojKarte = "KARTA-"+ brojKarte;
 
-                    biblioteka.registrujClana(ime, prezime);
+//                    biblioteka.registrujClana(ime, prezime);
+                    BazaKonekcija.dodajClanaUBazu(ime,prezime,brojKarte);
                     System.out.println("Clana "+ ime + " je registrovan.");
                     break;
                 case "6":
