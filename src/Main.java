@@ -1,12 +1,16 @@
-import model.Biblioteka;
+
+import model.Knjiga;
+import repository.KnjigaRepository;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws SQLException {
         Scanner input = new Scanner(System.in);
-        Biblioteka biblioteka = new Biblioteka();
+
+        KnjigaRepository knjigaRepo = new KnjigaRepository();
 
         while(true){
             System.out.println("\n-----BIBLIOTEKA MENI------");
@@ -33,15 +37,24 @@ public class Main {
                     System.out.println("Unesi IBSN: ");
                     String ibsn = input.nextLine();
 
-//                    Korisceno array list kao baza i sada je prevaceno na MySQL
-//                    biblioteka.dodajKnjigu(naslov, autor, ibsn);
-                    BazaKonekcija.dodajKnjiguUBazu(naslov, autor, ibsn);
+                    Knjiga k = new Knjiga(naslov, autor, ibsn);
+
+                    knjigaRepo.dodajKnjigu(k);
                     break;
 
 
                 case "2":
-//                    biblioteka.prikaziKnjige();
-                    BazaKonekcija.prikaziKnjigeIzBaze();
+
+                    List<Knjiga> sveKnjigeIzBaze = knjigaRepo.dobaviSveKnjige();
+
+                    System.out.println("\n--- KNJIGE U BIBLIOTECI ---");
+                    if (sveKnjigeIzBaze.isEmpty()) {
+                        System.out.println("Magacin je prazan!");
+                    } else {
+                        for (Knjiga knjiga : sveKnjigeIzBaze) {
+                            System.out.println("ID: " + knjiga.getId() + " | " + knjiga.getNaziv() + " - " + knjiga.getAutor());
+                        }
+                    }
                     break;
 
 
@@ -54,7 +67,7 @@ public class Main {
                         System.out.println("\nUnesi id knjige koju si uzeo: ");
                         idKnjige = Integer.parseInt(input.nextLine());
 //                        biblioteka.zaduziKnjigu(nazivKnjige,idClana);
-                        BazaKonekcija.zaduziKnjiguIzBaze(idClana,idKnjige);
+
                     }
                     catch (Exception e){
                         System.out.println("Neposotji na : "+ idKnjige);
@@ -83,7 +96,7 @@ public class Main {
                     System.out.println("Clana "+ ime + " je registrovan.");
                     break;
                 case "6":
-                    biblioteka.prikaziClanove();
+//                    biblioteka.prikaziClanove();
                     break;
                 case "7":
                     try{
