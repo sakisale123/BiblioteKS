@@ -66,4 +66,61 @@ public class ClanRepository {
             return k;
         }
     }
+
+    public List<Clan> prikaziClanove(){
+        String sqlUpit = "SELECT * FROM clanovi";
+        List<Clan> k = new ArrayList<>();
+
+        try (Connection konekcija = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement oklopnoVozilo = konekcija.prepareStatement(sqlUpit)) {
+
+            ResultSet rezultat = oklopnoVozilo.executeQuery();
+
+            while (rezultat.next()) {
+                int id = rezultat.getInt("id");
+                String ime = rezultat.getString("ime");
+                String prezime = rezultat.getString("prezime");
+                String brojKarte = rezultat.getString("broj_karte");
+
+                Clan k1 = new Clan(ime, prezime, brojKarte);
+                k1.setId(id);
+                k.add(k1);
+            }
+            return k;
+
+        }catch(SQLException e){
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+
+
+    public Clan pronadjiClanapoId (int id){
+        String sqlUpit = "SELECT * FROM clanovi WHERE id = ?";
+        Clan k = null;
+
+        try(Connection konecija = DriverManager.getConnection(URL,USER,PASSWORD);
+            PreparedStatement vozilo = konecija.prepareStatement(sqlUpit)){
+
+            vozilo.setInt(1, id);
+            ResultSet rezultat = vozilo.executeQuery();
+
+            if (rezultat.next()) {
+                int id1 = rezultat.getInt("id");
+                String ime = rezultat.getString("ime");
+                String prezime = rezultat.getString("prezime");
+                String brojKarte = rezultat.getString("broj_karte");
+
+                Clan k1 = new Clan(ime, prezime, brojKarte);
+                k1.setId(id1);
+                k = k1;
+
+            }
+            return k;
+        }catch (SQLException e){
+            System.out.println(e.getMessage());
+            return k;
+        }
+    }
 }

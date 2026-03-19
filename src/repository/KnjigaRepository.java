@@ -97,4 +97,33 @@ public class KnjigaRepository {
         }
 
     }
+
+
+    public Knjiga pronadjiClanapoId (int id){
+        String sqlUpit = "SELECT * FROM knjige WHERE id = ?";
+        Knjiga k = null;
+
+        try(Connection konecija = DriverManager.getConnection(URL,USER,PASSWORD);
+            PreparedStatement vozilo = konecija.prepareStatement(sqlUpit)){
+
+            vozilo.setInt(1, id);
+            ResultSet rezultat = vozilo.executeQuery();
+
+            if (rezultat.next()) {
+                int id1 = rezultat.getInt("id");
+                String ime = rezultat.getString("naziv");
+                String prezime = rezultat.getString("autor");
+                String brojKarte = rezultat.getString("isbn");
+
+                Knjiga k1 = new Knjiga(ime, prezime, brojKarte);
+                k1.setId(id1);
+                k = k1;
+
+            }
+            return k;
+        }catch (SQLException e){
+            System.out.println(e.getMessage());
+            return k;
+        }
+    }
 }

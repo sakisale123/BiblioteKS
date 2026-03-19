@@ -1,5 +1,7 @@
 
+import model.Clan;
 import model.Knjiga;
+import repository.ClanRepository;
 import repository.KnjigaRepository;
 
 import java.sql.SQLException;
@@ -11,6 +13,7 @@ public class Main {
         Scanner input = new Scanner(System.in);
 
         KnjigaRepository knjigaRepo = new KnjigaRepository();
+        ClanRepository clanRepo = new ClanRepository();
 
         while(true){
             System.out.println("\n-----BIBLIOTEKA MENI------");
@@ -59,28 +62,26 @@ public class Main {
 
 
                 case "3":
-                    int idKnjige = 0;
-                    int idClana = 0;
-                    try{
-                        System.out.println("\nUnesi clanskiBroj koji uzima: ");
-                        idClana = Integer.parseInt(input.nextLine());
-                        System.out.println("\nUnesi id knjige koju si uzeo: ");
-                        idKnjige = Integer.parseInt(input.nextLine());
-//                        biblioteka.zaduziKnjigu(nazivKnjige,idClana);
+                    System.out.println("Unesi id clana: ");
+                    int idC = Integer.parseInt(input.nextLine());
+                    System.out.println("Unesi id knjige: ");
+                    int idK = Integer.parseInt(input.nextLine());
 
-                    }
-                    catch (Exception e){
-                        System.out.println("Neposotji na : "+ idKnjige);
-                    }
+                    Clan clanZaZaduzivanje = clanRepo.pronadjiClanapoId(idC);
+                    Knjiga knjigaZaZaduczivanje = knjigaRepo.pronadjiClanapoId(idK);
+
+                    knjigaRepo.zaduziKnjiguIzBaze(clanZaZaduzivanje, knjigaZaZaduczivanje);
+                    System.out.println("Usposno ste zaduzili knjigu "+ knjigaZaZaduczivanje.getNaziv());
                     break;
 
                 case "4":
-//                    System.out.println("\nUnesi clanskiBroj koji uzima: ");
-//                    idClana = Integer.parseInt(input.nextLine());
-                    System.out.println("\nUnesi id knjige koju si uzeo: ");
-                    idKnjige = Integer.parseInt(input.nextLine());
-//                    biblioteka.vratiKnjigu(idKnjige,idClana);
-                    BazaKonekcija.vratiKnjiguUBazu(idKnjige);
+                    System.out.println("Unesi id knjige: ");
+                    int idKn = Integer.parseInt(input.nextLine());
+
+                    Knjiga knjigaZaVracanje = knjigaRepo.pronadjiClanapoId(idKn);
+
+                    knjigaRepo.vratiKnjiguUBazu(knjigaZaVracanje);
+                    System.out.println("Usposno ste vratili knjigu "+ knjigaZaVracanje.getNaziv());
                     break;
                 case "5":
                     System.out.println("Unesi ime: ");
@@ -91,19 +92,36 @@ public class Main {
                     String brojKarte = input.nextLine();
                     brojKarte = "KARTA-"+ brojKarte;
 
-//                    biblioteka.registrujClana(ime, prezime);
-                    BazaKonekcija.dodajClanaUBazu(ime,prezime,brojKarte);
+                    Clan clanZaDodavanje = new Clan(ime, prezime, brojKarte);
+
+                    clanRepo.dodajClanaUBazu(clanZaDodavanje);
                     System.out.println("Clana "+ ime + " je registrovan.");
                     break;
+
                 case "6":
-//                    biblioteka.prikaziClanove();
+                    List<Clan> listaClanov = clanRepo.prikaziClanove();
+                    for(Clan c : listaClanov){
+                        System.out.println(c.getId() +" | "+ c.getIme()+" "+c.getPrezime()+" | "+c.getBrojKarte());
+                    }
                     break;
+
                 case "7":
                     try{
-                        System.out.println("Unesi id clanske : ");
-                        int id = Integer.parseInt(input.nextLine());
-                        BazaKonekcija.prikaziKnjigeClana(id);
-//                        biblioteka.prikaziZaduzeneKnjige(id);
+                        System.out.println("Unesi id clana: ");
+                        int id4 = Integer.parseInt(input.nextLine());
+                        Clan trazeniClan = clanRepo.pronadjiClanapoId(id4);
+
+                        List<Knjiga> njegoveKnjige = clanRepo.prikaziKnjigeClana(trazeniClan);
+
+                        System.out.println("--- KNJIGE KOD CLANA: " + trazeniClan.getIme() + " " + trazeniClan.getPrezime() + " ---");
+
+                        if (njegoveKnjige.isEmpty()) {
+                            System.out.println("Ovaj clan nema zaduzenih knjiga.");
+                        } else {
+                            for (Knjiga k3 : njegoveKnjige) {
+                                System.out.println("- " + k3.getNaziv() + " (" + k3.getAutor() + ")");
+                            }
+                        }
                     }catch (Exception e){
                         System.out.println("Greska pri pretrazi");
                     }
