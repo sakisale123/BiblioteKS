@@ -3,6 +3,8 @@ import model.Clan;
 import model.Knjiga;
 import repository.ClanRepository;
 import repository.KnjigaRepository;
+import service.BibliotekaService;
+import service.impl.BibliotekaServiceImpl;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -14,6 +16,7 @@ public class Main {
 
         KnjigaRepository knjigaRepo = new KnjigaRepository();
         ClanRepository clanRepo = new ClanRepository();
+        BibliotekaService service = new BibliotekaServiceImpl();
 
         while(true){
             System.out.println("\n-----BIBLIOTEKA MENI------");
@@ -67,18 +70,16 @@ public class Main {
                     System.out.println("Unesi id knjige: ");
                     int idK = Integer.parseInt(input.nextLine());
 
-                    Clan clanZaZaduzivanje = clanRepo.pronadjiClanapoId(idC);
-                    Knjiga knjigaZaZaduczivanje = knjigaRepo.pronadjiClanapoId(idK);
+                    String odgovor = service.procesirajZaduzivanje(idC, idK);
 
-                    knjigaRepo.zaduziKnjiguIzBaze(clanZaZaduzivanje, knjigaZaZaduczivanje);
-                    System.out.println("Usposno ste zaduzili knjigu "+ knjigaZaZaduczivanje.getNaziv());
+                    System.out.println(odgovor);
                     break;
 
                 case "4":
                     System.out.println("Unesi id knjige: ");
                     int idKn = Integer.parseInt(input.nextLine());
 
-                    Knjiga knjigaZaVracanje = knjigaRepo.pronadjiClanapoId(idKn);
+                    Knjiga knjigaZaVracanje = knjigaRepo.pronadjiKnjiguPoId(idKn);
 
                     knjigaRepo.vratiKnjiguUBazu(knjigaZaVracanje);
                     System.out.println("Usposno ste vratili knjigu "+ knjigaZaVracanje.getNaziv());
@@ -106,25 +107,25 @@ public class Main {
                     break;
 
                 case "7":
-                    try{
-                        System.out.println("Unesi id clana: ");
-                        int id4 = Integer.parseInt(input.nextLine());
-                        Clan trazeniClan = clanRepo.pronadjiClanapoId(id4);
-
-                        List<Knjiga> njegoveKnjige = clanRepo.prikaziKnjigeClana(trazeniClan);
-
-                        System.out.println("--- KNJIGE KOD CLANA: " + trazeniClan.getIme() + " " + trazeniClan.getPrezime() + " ---");
-
-                        if (njegoveKnjige.isEmpty()) {
-                            System.out.println("Ovaj clan nema zaduzenih knjiga.");
-                        } else {
-                            for (Knjiga k3 : njegoveKnjige) {
-                                System.out.println("- " + k3.getNaziv() + " (" + k3.getAutor() + ")");
-                            }
-                        }
-                    }catch (Exception e){
-                        System.out.println("Greska pri pretrazi");
-                    }
+//                    try{
+//                        System.out.println("Unesi id clana: ");
+//                        int id4 = Integer.parseInt(input.nextLine());
+//                        Clan trazeniClan = clanRepo.pronadjiClanapoId(id4);
+//
+//                        List<Knjiga> njegoveKnjige = clanRepo.prikaziKnjigeClana(trazeniClan);
+//
+//                        System.out.println("--- KNJIGE KOD CLANA: " + trazeniClan.getIme() + " " + trazeniClan.getPrezime() + " ---");
+//
+//                        if (njegoveKnjige.isEmpty()) {
+//                            System.out.println("Ovaj clan nema zaduzenih knjiga.");
+//                        } else {
+//                            for (Knjiga k3 : njegoveKnjige) {
+//                                System.out.println("- " + k3.getNaziv() + " (" + k3.getAutor() + ")");
+//                            }
+//                        }
+//                    }catch (Exception e){
+//                        System.out.println("Greska pri pretrazi");
+//                    }
                     break;
 
 

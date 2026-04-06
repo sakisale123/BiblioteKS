@@ -13,7 +13,7 @@ public class KnjigaRepository {
     private static final String USER = "root";
     private static final String PASSWORD = "sakisale123";
 
-    public List<Knjiga> dobaviSveKnjige() throws SQLException {
+    public List<Knjiga> dobaviSveKnjige(){
         List<Knjiga> lista = new ArrayList<>();
         String sqlUpit = "SELECT * FROM knjige";
 
@@ -99,7 +99,7 @@ public class KnjigaRepository {
     }
 
 
-    public Knjiga pronadjiClanapoId (int id){
+    public Knjiga pronadjiKnjiguPoId (int id){
         String sqlUpit = "SELECT * FROM knjige WHERE id = ?";
         Knjiga k = null;
 
